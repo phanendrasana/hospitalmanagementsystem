@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarePoint Hospital Management</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f2f6fa;color:#203040}
+header{background:#087f73;color:white;padding:22px 6%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+header h1{font-size:24px}
+header p{font-size:12px;margin-top:5px}
+nav{background:white;padding:14px 6%;display:flex;gap:10px;flex-wrap:wrap;box-shadow:0 2px 8px #0001}
+button{cursor:pointer;border:0;border-radius:6px;padding:10px 15px;font-weight:bold}
+nav button{background:#e4f4f1;color:#087f73}
+nav button:hover,.primary:hover{background:#075e56;color:white}
+main{max-width:1200px;margin:28px auto;padding:0 18px}
+h2{margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:25px}
+.card,.panel{background:white;border-radius:12px;padding:20px;box-shadow:0 3px 15px #1020300b;margin-bottom:20px}
+.card p{color:#718096;font-size:14px}
+.card h2{color:#087f73;margin:12px 0 0}
+.panel h3{margin-bottom:15px}
+input,select{padding:11px;border:1px solid #d6dfe7;border-radius:6px;width:100%;margin:6px 0 12px}
+label{font-size:13px;font-weight:bold}
+.primary{background:#087f73;color:white}
+.danger{background:#ffe9e9;color:#b42323}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{text-align:left;padding:13px;border-bottom:1px solid #e9eef2;font-size:13px}
+th{background:#f5f8fa}
+.table-wrap{overflow-x:auto}
+.section{display:none}
+.section.active{display:block}
+.search{max-width:350px}
+footer{text-align:center;padding:25px;color:#718096;font-size:12px}
+</style>
+</head>
+
+<body>
+<header>
+ <div>
+  <h1>✚ CarePoint</h1>
+  <p>Hospital Management System</p>
+ </div>
+ <div id="today"></div>
+</header>
+
+<nav>
+ <button onclick="show('dashboard')">Dashboard</button>
+ <button onclick="show('patients')">Patients</button>
+ <button onclick="show('doctors')">Doctors</button>
+ <button onclick="show('appointments')">Appointments</button>
+ <button onclick="show('billing')">Billing</button>
+</nav>
+
+<main>
+
+<section id="dashboard" class="section active">
+ <h2>Hospital Dashboard</h2>
+ <div class="stats">
+  <div class="card"><p>Total Patients</p><h2 id="patientCount">0</h2></div>
+  <div class="card"><p>Total Doctors</p><h2 id="doctorCount">0</h2></div>
+  <div class="card"><p>Appointments</p><h2 id="appointmentCount">0</h2></div>
+  <div class="card"><p>Paid Revenue</p><h2 id="revenue">₹0</h2></div>
+ </div>
+ <div class="panel">
+  <h3>Welcome, Administrator!</h3>
+  <p>Manage patient records, doctors, appointments and billing from one dashboard.</p>
+ </div>
+</section>
+
+<section id="patients" class="section">
+ <h2>Patient Management</h2>
+ <div class="panel">
+  <h3>Register Patient</h3>
+  <form id="patientForm">
+   <div class="form-grid">
+    <div><label>Full Name</label><input id="pname" required></div>
+    <div><label>Age</label><input id="page" type="number" min="0" max="120" required></div>
+    <div><label>Gender</label><select id="pgender" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+    <div><label>Phone</label><input id="pphone" type="tel"></div>
+   </div>
+   <button class="primary">Add Patient</button>
+  </form>
+ </div>
+ <input class="search" id="patientSearch" placeholder="Search patients...">
+ <div class="panel table-wrap">
+  <table><thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Phone</th><th>Action</th></tr></thead>
+  <tbody id="patientTable"></tbody></table>
+ </div>
+</section>
+
+<section id="doctors" class="section">
+ <h2>Doctor Management</h2>
+ <div class="panel">
+  <form id="doctorForm">
+   <div class="form-grid">
+    <div><label>Doctor Name</label><input id="dname" required></div>
+    <div><label>Specialization</label><input id="dspecialty" required></div>
+    <div><label>Phone</label><input id="dphone" type="tel"></div>
+   </div>
+   <button class="primary">Add Doctor</button>
+  </form>
+ </div>
+ <div class="panel table-wrap">
+  <table><thead><tr><th>ID</th><th>Name</th><th>Specialization</th><th>Phone</th><th>Action</th></tr></thead>
+  <tbody id="doctorTable"></tbody></table>
+ </div>
+</section>
+
+<section id="appointments" class="section">
+ <h2>Appointment Management</h2>
+ <div class="panel">
+  <form id="appointmentForm">
+   <div class="form-grid">
+    <div><label>Patient</label><select id="apatient" required></select></div>
+    <div><label>Doctor</label><select id="adoctor" required></select></div>
+    <div><label>Date</label><input id="adate" type="date" required></div>
+    <div><label>Time</label><input id="atime" type="time" required></div>
+   </div>
+   <button class="primary">Book Appointment</button>
+  </form>
+ </div>
+ <div class="panel table-wrap">
+  <table><thead><tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody id="appointmentTable"></tbody></table>
+ </div>
+</section>
+
+<section id="billing" class="section">
+ <h2>Billing Management</h2>
+ <div class="panel">
+  <form id="billForm">
+   <div class="form-grid">
+    <div><label>Patient</label><select id="bpatient" required></select></div>
+    <div><label>Description</label><input id="bdescription" required></div>
+    <div><label>Amount (₹)</label><input id="bamount" type="number" min="0" step="0.01" required></div>
+   </div>
+   <button class="primary">Generate Bill</button>
+  </form>
+ </div>
+ <div class="panel table-wrap">
+  <table><thead><tr><th>Invoice</th><th>Patient</th><th>Description</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody id="billTable"></tbody></table>
+ </div>
+</section>
+
+</main>
+<footer>CarePoint Hospital Management System · Academic Demo</footer>
+
+<script>
+const KEY="carepoint_data_v1";
+let db;
+try{
+ db=JSON.parse(localStorage.getItem(KEY))||{
+  patients:[],doctors:[],appointments:[],bills:[]
+ };
+}catch(e){
+ db={patients:[],doctors:[],appointments:[],bills:[]};
+}
+
+const $=id=>document.getElementById(id);
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
+
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(db));
+ render();
+}
+
+function show(id){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ $(id).classList.add("active");
+}
+
+function nextId(type){
+ return type+"-"+Date.now().toString().slice(-7);
+}
+
+function patientName(id){
+ return db.patients.find(p=>p.id===id)?.name||"Deleted patient";
+}
+
+function doctorName(id){
+ return db.doctors.find(d=>d.id===id)?.name||"Deleted doctor";
+}
+
+function removeRecord(type,id){
+ if(!confirm("Delete this record?"))return;
+ db[type]=db[type].filter(x=>x.id!==id);
+ save();
+}
+
+$("patientForm").onsubmit=e=>{
+ e.preventDefault();
+ db.patients.push({
+  id:nextId("P"),
+  name:$("pname").value.trim(),
+  age:$("page").value,
+  gender:$("pgender").value,
+  phone:$("pphone").value.trim()
+ });
+ e.target.reset();
+ save();
+};
+
+$("doctorForm").onsubmit=e=>{
+ e.preventDefault();
+ db.doctors.push({
+  id:nextId("D"),
+  name:$("dname").value.trim(),
+  specialty:$("dspecialty").value.trim(),
+  phone:$("dphone").value.trim()
+ });
+ e.target.reset();
+ save();
+};
+
+$("appointmentForm").onsubmit=e=>{
+ e.preventDefault();
+ db.appointments.push({
+  id:nextId("A"),
+  patient:$("apatient").value,
+  doctor:$("adoctor").value,
+  date:$("adate").value,
+  time:$("atime").value,
+  status:"Booked"
+ });
+ e.target.reset();
+ save();
+};
+
+$("billForm").onsubmit=e=>{
+ e.preventDefault();
+ db.bills.push({
+  id:nextId("INV"),
+  patient:$("bpatient").value,
+  description:$("bdescription").value.trim(),
+  amount:Number($("bamount").value),
+  status:"Unpaid"
+ });
+ e.target.reset();
+ save();
+};
+
+function render(){
+ $("patientCount").textContent=db.patients.length;
+ $("doctorCount").textContent=db.doctors.length;
+ $("appointmentCount").textContent=db.appointments.length;
+ $("revenue").textContent="₹"+db.bills
+  .filter(b=>b.status==="Paid")
+  .reduce((s,b)=>s+b.amount,0).toLocaleString("en-IN");
+
+ const query=$("patientSearch").value.toLowerCase();
+ $("patientTable").innerHTML=db.patients
+ .filter(p=>(p.name+" "+p.id+" "+p.phone).toLowerCase().includes(query))
+ .map(p=>`<tr>
+  <td>${safe(p.id)}</td><td>${safe(p.name)}</td>
+  <td>${safe(p.age)}</td><td>${safe(p.gender)}</td>
+  <td>${safe(p.phone)}</td>
+  <td><button class="danger" onclick="removeRecord('patients','${safe(p.id)}')">Delete</button></td>
+ </tr>`).join("")||'<tr><td colspan="6">No patients registered.</td></tr>';
+
+ $("doctorTable").innerHTML=db.doctors.map(d=>`<tr>
+  <td>${safe(d.id)}</td><td>${safe(d.name)}</td>
+  <td>${safe(d.specialty)}</td><td>${safe(d.phone)}</td>
+  <td><button class="danger" onclick="removeRecord('doctors','${safe(d.id)}')">Delete</button></td>
+ </tr>`).join("")||'<tr><td colspan="5">No doctors added.</td></tr>';
+
+ $("appointmentTable").innerHTML=db.appointments.map(a=>`<tr>
+  <td>${safe(a.id)}</td><td>${safe(patientName(a.patient))}</td>
+  <td>${safe(doctorName(a.doctor))}</td><td>${safe(a.date)}</td>
+  <td>${safe(a.time)}</td><td>${safe(a.status)}</td>
+  <td><button class="danger" onclick="removeRecord('appointments','${safe(a.id)}')">Delete</button></td>
+ </tr>`).join("")||'<tr><td colspan="7">No appointments.</td></tr>';
+
+ $("billTable").innerHTML=db.bills.map(b=>`<tr>
+  <td>${safe(b.id)}</td><td>${safe(patientName(b.patient))}</td>
+  <td>${safe(b.description)}</td><td>₹${b.amount.toLocaleString("en-IN")}</td>
+  <td>${safe(b.status)}</td>
+  <td>${b.status==="Unpaid"?`<button class="primary" onclick="payBill('${safe(b.id)}')">Mark Paid</button>`:"Paid"}
+  <button class="danger" onclick="removeRecord('bills','${safe(b.id)}')">Delete</button></td>
+ </tr>`).join("")||'<tr><td colspan="6">No bills generated.</td></tr>';
+
+ const patientOptions=db.patients.map(p=>`<option value="${safe(p.id)}">${safe(p.name)}</option>`).join("");
+ const doctorOptions=db.doctors.map(d=>`<option value="${safe(d.id)}">${safe(d.name)}</option>`).join("");
+ $("apatient").innerHTML=patientOptions;
+ $("bpatient").innerHTML=patientOptions;
+ $("adoctor").innerHTML=doctorOptions;
+}
+
+function payBill(id){
+ const bill=db.bills.find(b=>b.id===id);
+ if(bill){bill.status="Paid";save();}
+}
+
+$("patientSearch").addEventListener("input",render);
+$("today").textContent=new Date().toLocaleDateString("en-IN",{
+ weekday:"short",day:"numeric",month:"short",year:"numeric"
+});
+$("adate").value=new Date().toISOString().slice(0,10);
+render();
+</script>
+</body>
+</html>
